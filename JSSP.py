@@ -79,51 +79,71 @@ M = []  # Conjunto tridimensional con las secuencias por máquina. Cada secuenci
 # donde i es el trabajo y j es la operación
 def crearContenedor():
     global numOp, numMaq, contenedor
-    contenedor = Tk()  # La función Tk del módulo tkinter crea el contenedor de la interfaz
-    contenedor.title("Job-Shop Scheduling Problem")
-    contenedor.geometry('1050x900')  # Medidas iniciales de la interfaz
-    contenedor.config(bg="lightblue")  # Cambia el color de fondo del contenedor principal de la interfaz
+    root = tk.Tk()  # La función Tk del módulo tkinter crea el contenedor de la interfaz
+    root.title("Job-Shop Scheduling Problem")
+
     # Agregamos los campos donde el usuario ingresar el numero de operaciones, de máquinas y de trabajos
-    Op = Entry(contenedor, justify="center", width=10)
+    # Utilizamos un canvas, para poder agregar una scrollbar para navegar por la interfaz
+    container = ttk.Frame(root, width=800, height=600)
+    canvas = tk.Canvas(container, width=800, height=600)
+    scrollbar = ttk.Scrollbar(container, orient="vertical", command=canvas.yview)
+    scrollbar2 = ttk.Scrollbar(container, orient="horizontal", command=canvas.xview)
+    contenedor = ttk.Frame(canvas, width=2000, height=800)
+
+    contenedor.bind(
+        "<Configure>",
+        lambda e: canvas.configure(
+            scrollregion=canvas.bbox("all")
+        )
+    )
+    canvas.create_window((0, 0), window=contenedor, anchor="nw")
+
+    canvas.configure(yscrollcommand=scrollbar.set)
+    canvas.configure(xscrollcommand=scrollbar2.set)
+    container.pack()
+    canvas.pack(side="left", fill="both", expand=True)
+    scrollbar.pack(side="right", fill="y")
+    scrollbar2.pack(side="bottom", fill="x")
+
+    Op = ttk.Entry(contenedor, justify="center", width=10, background="lightblue1")
     Op.config(foreground="black")  # Color de la letra del texto que se introduce
     Op.config(font="Helvetica")  # Fuente de la letra del texto que se introduce
-    Op.config(bg="lightblue1")  # Color de fondo del Entry
+
     Op.place(x=250, y=21)  # Coordenadas de posiconamiento del Entry
-    Maq = Entry(contenedor, justify="center", width=10)
+    Maq = ttk.Entry(contenedor, justify="center", width=10)
     Maq.config(foreground="black")  # Color de la letra del texto que se introduce
     Maq.config(font="Helvetica")  # Fuente de la letra del texto que se introduce
-    Maq.config(bg="lightblue1")  # Color de fondo del Entry
+    Maq.config(background="lightblue1")  # Color de fondo del Entry
     Maq.place(x=250, y=86)  # Coordenadas de posiconamiento del Entry
-    Job = Entry(contenedor, justify="center", width=10)
+    Job = ttk.Entry(contenedor, justify="center", width=10)
     Job.config(foreground="black")  # Color de la letra del texto que se introduce
     Job.config(font="Helvetica")  # Fuente de la letra del texto que se introduce
-    Job.config(bg="lightblue1")  # Color de fondo del Entry
+    Job.config(background="lightblue1")  # Color de fondo del Entry
     Job.place(x=250, y=150)  # Coordenadas de posiconamiento del Entry
     # Agregamos los botones que permiten recoger las operaciones y las máquinas ingresadas
     # El argumento command permite manipular la acción en el programa cuando el botón es presionado
     # Ambos botones llaman a las funciones que permiten establecer el número de operaciones, de máquinas y de
     # trabajos que ingreso el usuario
-    botonOp = Button(contenedor, text='Núm. de Operaciones', command=lambda: setOperaciones(Op.get(), contenedor))
-    botonOp.config(bg="dodgerblue2")  # Color de fondo del botón
-    botonOp.config(foreground="white")  # Color de la letra del texto que se introduce
-    botonOp.config(font="Constantia")  # Fuente de la letra del texto que se introduce
-    botonOp.config(width=20)  # Tamaño del botón
+    botonOp = tk.Button(contenedor, text='Núm. de Operaciones', command=lambda: setOperaciones(Op.get(), contenedor))
+    botonOp.configure(background="dodgerblue2")  # Color de fondo del botón
+    botonOp.configure(foreground="white")  # Color de la letra del texto que se introduce
+    botonOp.configure(font="Constantia")  # Fuente de la letra del texto que se introduce
+    botonOp.configure(width=20)  # Tamaño del botón
     botonOp.place(x=15, y=15)  # Coordenadas de posiconamiento del botón
-    botonMaq = Button(contenedor, text='Núm. de Máquinas', command=lambda: setMaquinas(Maq.get(), contenedor))
-    botonMaq.config(bg="dodgerblue2")  # Color de fondo del botón
-    botonMaq.config(foreground="white")  # Fuente de la letra del texto que se introduce
-    botonMaq.config(font="Constantia")  # Fuente de la letra del texto que se introduce
-    botonMaq.config(width=20)  # Tamaño del botón
+    botonMaq = tk.Button(contenedor, text='Núm. de Máquinas', command=lambda: setMaquinas(Maq.get(), contenedor))
+    botonMaq.configure(background="dodgerblue2")  # Color de fondo del botón
+    botonMaq.configure(foreground="white")  # Fuente de la letra del texto que se introduce
+    botonMaq.configure(font="Constantia")  # Fuente de la letra del texto que se introduce
+    botonMaq.configure(width=20)  # Tamaño del botón
     botonMaq.place(x=15, y=80)  # Coordenadas de posiconamiento del botón
-    botonJob = Button(contenedor, text='Núm. de Trabajos', command=lambda: setTrabajos(Job.get(), contenedor))
-    botonJob.config(bg="dodgerblue2")  # Color de fondo del botón
-    botonJob.config(foreground="white")  # Fuente de la letra del texto que se introduce
-    botonJob.config(font="Constantia")  # Fuente de la letra del texto que se introduce
-    botonJob.config(width=20)  # Tamaño del botón
+    botonJob = tk.Button(contenedor, text='Núm. de Trabajos', command=lambda: setTrabajos(Job.get(), contenedor))
+    botonJob.configure(background="dodgerblue2")  # Color de fondo del botón
+    botonJob.configure(foreground="white")  # Fuente de la letra del texto que se introduce
+    botonJob.configure(font="Constantia")  # Fuente de la letra del texto que se introduce
+    botonJob.configure(width=20)  # Tamaño del botón
     botonJob.place(x=15, y=145)  # Coordenadas de posiconamiento del botón
 
-    contenedor.mainloop()  # Función que permite ver en pantalla la interfaz
-
+    root.mainloop()  # Función que permite ver en pantalla la interfaz
 
 # Funciones para establecer el número de operaciones, máquinas y trabajos
 def setOperaciones(Op, contenedor):
@@ -248,7 +268,11 @@ def setTiempoOpe(operacionesAux):
     if len(Jobs) > 0:  # Cuando ya estan definidos el conjunto de trabajos y operaciones, crea el boton para
         # iniciar simulación
         IniciarJSSP = Button(contenedor, text='Iniciar Simulación', command=JSSP)
-        IniciarJSSP.place(x=230, y=400)
+        IniciarJSSP.config(bg="orange2")  # Color de fondo del botón
+        IniciarJSSP.config(foreground="black")  # Color de la letra del texto que se introduce
+        IniciarJSSP.config(font="Helvetica")  # Fuente de la letra del texto que se introduce
+        IniciarJSSP.place(x=530, y=50)
+        IniciarJSSP.config(width=15, height=3)
 
 
 # Función que crea el conjunto de los trabajos con sus operaciones desde la tabla
