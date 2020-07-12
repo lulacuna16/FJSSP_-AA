@@ -333,8 +333,6 @@ def JSSP():  # Se realiza la candelarización de los trabajos y operaciones
     global M, S  # Salidas
     crearTabla()  # Crea la tabla de tiempos
     crearGrafica()  # Inicializar la gráfica
-    # Jobs=[[], [1,2,4], [2,4], [3, 4],[1,4],[1,3,4], [3,4]]
-    # TOperaciones=[[], [3,4,5], [2,1,3], [5,6,2],[2,5,1]]
     M = [[] for i in range(len(TOperaciones[1]) + 1)]  # Crea tantos subarreglos como máquinas
 
     print("Iniciando Simulación")
@@ -407,9 +405,7 @@ def JSSP():  # Se realiza la candelarización de los trabajos y operaciones
 
     verTabla()  # Muestra la tabla terminado el algoritmo
     verGrafica(max(finalJob))  # Muestra la grafica
-    print("Conjunto S:", S)
-    for i in range(1, len(M)):
-        print("M{} :{}".format(i, M[i]))
+    print("Conjunto S (trabajo, operación, máquina):", S)
 
 
 def grafica(numOperacion, numTrabajo, maquinaElegida, tiempoIni, tiempoFin):
@@ -448,8 +444,6 @@ def verGrafica(makespan):
 
 def main():
     crearContenedor()
-    # JSSP()
-
     return 0
 
 
